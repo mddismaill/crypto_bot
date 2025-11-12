@@ -6,6 +6,7 @@ from flask import Flask, request
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CRYPTOBOT_TOKEN = os.getenv("CRYPTOBOT_TOKEN")
 PRIVATE_CHANNEL_LINK = os.getenv("PRIVATE_CHANNEL_LINK")
+WEBHOOK_URL = f"https://crypto-bot-1-5xna.onrender.com/{BOT_TOKEN}"
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__)
@@ -33,11 +34,15 @@ def create_invoice(amount, user_id):
 # 🔸 Команда /start
 @bot.message_handler(commands=['start'])
 def start(message):
+    bot.send_message(
+        message.chat.id,
+        "👋 Привет! Чтобы получить доступ к закрытому каналу, пожалуйста, ознакомьтесь с нашей офертой и политикой конфиденциальности."
+    )
     markup = telebot.types.InlineKeyboardMarkup()
     markup.add(telebot.types.InlineKeyboardButton("💳 Оплатить 5 USDT", callback_data="pay"))
     bot.send_message(
         message.chat.id,
-        "👋 Привет! Здесь можно купить доступ к закрытому каналу.\n\nСтоимость: 5 USDT.",
+        "Стоимость: 5 USDT",
         reply_markup=markup
     )
 
@@ -59,6 +64,10 @@ def index():
     return "Bot is running!"
 
 if __name__ == "__main__":
-    # Для локального запуска (Render сам подставит порт)
+    # Сбрасываем старый webhook и ставим новый
     bot.remove_webhook()
+    requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook?url={WEBHOOK_URL}")
+
+    # Запуск Flask
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
+
