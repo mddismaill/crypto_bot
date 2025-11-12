@@ -51,13 +51,6 @@ def pay_handler(call):
     url = create_invoice(5, call.from_user.id)
     bot.send_message(call.message.chat.id, f"👉 Оплатите по ссылке:\n{url}")
 
-# 🔹 Flask webhook
-@app.route(f"/{BOT_TOKEN}", methods=["POST"])
-def webhook():
-    update = telebot.types.Update.de_json(request.stream.read().decode("utf-8"))
-    bot.process_new_updates([update])
-    return "OK", 200
-
 @app.route("/", methods=["GET"])
 def index():
     return "Bot is running!"
@@ -65,6 +58,7 @@ def index():
 if __name__ == "__main__":
     # Запуск Flask
     bot.infinity_polling()
+
 
 
 
