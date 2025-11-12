@@ -1,0 +1,5 @@
+Flask
+python-dotenv
+pyTelegramBotAPI
+SQLAlchemy
+requests
