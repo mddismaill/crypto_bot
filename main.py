@@ -6,7 +6,6 @@ from flask import Flask, request
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CRYPTOBOT_TOKEN = os.getenv("CRYPTOBOT_TOKEN")
 PRIVATE_CHANNEL_LINK = os.getenv("PRIVATE_CHANNEL_LINK")
-WEBHOOK_URL = f"https://crypto-bot-1-5xna.onrender.com/{BOT_TOKEN}"
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__)
@@ -64,10 +63,7 @@ def index():
     return "Bot is running!"
 
 if __name__ == "__main__":
-    # Сбрасываем старый webhook и ставим новый
-    bot.remove_webhook()
-    requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook?url={WEBHOOK_URL}")
-
     # Запуск Flask
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
+
 
